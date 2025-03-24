@@ -1,0 +1,65 @@
+﻿@page "/servers" 
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@* above page directive marks this component as routable *@
+ 
+<h3>Servers</h3>
+<br/>
+<br/>
+
+<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"></CityListComponent>
+<br />
+<br />
+    
+<ServerSearchComponent @ref="searchComponent" SearchServerCallback="HandleSearchServer"></ServerSearchComponent>
+@*  @serverFilter *@
+<br/>
+@* recommended to specify render mode where the component is used*@
+@*it can be specied in a page, or globally in the App.razor in the Routes*@
+@* <ServerComponent @rendermode="InteractiveServer"></ServerComponent>  *@
+@* <ServerComponent></ServerComponent> *@    
+
+<CascadingValue Name="SelectedCity" Value="@selectedCity">  @* used to pass value from parent component to a particular child component *@
+	<ServerListComponent 
+		@rendermode="InteractiveServer" 
+		CityName="@this.selectedCity"
+		SearchFilter="@searchFilter">
+	</ServerListComponent>   @* //child component *@    
+</CascadingValue>
+<br />
+
+<a href="/servers/add" class="btn btn-primary">Add Server</a>    
+
+
+@code {
+
+    // private List<String> cities = CitiesRepo.GetCities();
+    private string? selectedCity = "Madison";
+    // public List<Server>? servers;
+    // private string _serverFilter = "";
+    private string searchFilter = "";
+
+    private CityListComponent? cityListComponent;
+
+    private ServerSearchComponent? searchComponent;
+
+    // // private void HandleSearch()
+    // // {
+    // //     this.servers = ServerRepo.SearchServers(serverFilter);
+    // //     // this.selectedCity = string.Empty;
+    // // }
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+        this.searchFilter = string.Empty;
+
+        searchComponent?.ClearSearchFilter(); //Clear the search bar
+
+    }
+    private void HandleSearchServer(string searchFilter)
+    {
+        this.searchFilter = searchFilter;
+        cityListComponent?.ClearSelection(); //clears city (no longer highlighted) by referncing child component using @ref
+
+    }
+}

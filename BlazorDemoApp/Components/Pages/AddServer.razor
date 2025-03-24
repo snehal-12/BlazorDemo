@@ -1,0 +1,52 @@
+﻿@page "/servers/add"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<h3>Add Server</h3>
+<div>
+    @* <EditForm Model="server" FormName="addServer" OnValidSubmit="Add"> *@
+        @* //when using interactivity we do not need to have form name *@
+        <EditForm Model="server"  OnValidSubmit="Add">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+
+        <div class="row mb-3">
+            <div class="col-2">
+                <label class="col-form-label">Name</label>
+            </div>
+            <div class="col-6">
+                <InputText @bind-Value="server.Name" class="form-control"></InputText>
+            </div>
+            <div class="col">
+                <ValidationMessage For="()=>server.Name"></ValidationMessage> @*validation Message displays message next to the field*@
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-2">
+                <label class="col-form-label">City</label>
+            </div>
+            <div class="col-6">
+                <InputText @bind-Value="server.City" class="form-control"></InputText>
+            </div>
+            <div class="col">
+                <ValidationMessage For="()=>server.City"></ValidationMessage>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        &nbsp;
+        <a href="/servers" class="btn btn-primary">Cancel</a>
+    </EditForm>
+</div>
+
+@code {
+    /*static server side rendering*/
+    //when using interactivity we do not need to have this aupply parameter from form attribute
+    // [SupplyParameterFromForm]
+    private Server? server { get; set; } = new Server() { IsActive = false };
+    
+    private void Add()
+    {
+        if(server != null)
+        ServerRepo.AddServer(server);
+
+        NavigationManager.NavigateTo("/servers");
+    }
+}

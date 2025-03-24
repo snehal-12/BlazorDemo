@@ -1,0 +1,34 @@
+﻿
+
+@if(this.servers != null && this.servers.Count > 0)
+{
+    <ul class="list-unstyled">
+        <Virtualize Items="this.servers" Context="server">@* //acts as a loop for a very long list with about 1000 items. items have to be same height*@
+            <ServerComponent Server="server"></ServerComponent>
+        </Virtualize>@* //used to improve performance of list rendering *@
+    </ul>
+    
+}
+
+
+@code {
+    [Parameter]
+    public string? CityName { get; set; }
+    // private List<Server> servers = ServerRepo.GetServersByCity("Madison");
+    [Parameter]
+    public string? SearchFilter { get; set; } = "";
+
+    private List<Server>? servers;
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(this.SearchFilter))
+        {
+            servers = ServerRepo.GetServersByCity(CityName ?? "Madison");
+        }
+        else
+            servers = ServerRepo.SearchServers(this.SearchFilter);
+        
+    }
+    
+}

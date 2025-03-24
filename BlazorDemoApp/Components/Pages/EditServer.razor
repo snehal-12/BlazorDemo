@@ -1,0 +1,76 @@
+﻿@page "/servers/{id:int}"
+@inject NavigationManager NavigationManager
+<h3>Edit Server</h3>
+<div>
+    @if(server != null)
+    {
+        <EditForm Model="server" FormName="formServer" OnValidSubmit="Submit"> 
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <ValidationSummary></ValidationSummary> @*validation summary displays message on top of all the fields in the form*@
+            <InputNumber @bind-Value="server.Id" hidden></InputNumber>
+            
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label class="col-form-label">Name</label>
+                </div>
+                <div class="col-6 input-width">
+                    <InputText @bind-Value="server.Name" class="form-control"></InputText>
+                </div>
+                <div class="col">
+                    <ValidationMessage For="()=>server.Name"></ValidationMessage> @*validation Message displays message next to the field*@
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label class="col-form-label">City</label>
+                </div>
+                <div class="col-6 input-width">
+                    <InputText @bind-Value="server.City" class="form-control"></InputText>
+                </div>
+                <div class="col">
+                    <ValidationMessage For="()=>server.City"></ValidationMessage>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label class="col-form-label">IsActive</label>
+                </div>
+                <div class="col-6">
+                    <InputCheckbox @bind-Value="server.IsActive" class="form-check-input"></InputCheckbox>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Update</button>
+            &nbsp;
+            <a href="/servers" class="btn btn-primary">Close</a>
+            
+        </EditForm>
+       
+    }
+    
+</div>
+@code {
+    [Parameter] //Route parameter received in the url
+    public int Id { get; set; }
+
+    //Model Binding
+    //blazor knows from this property that the incomin data in the form needs to be bound to this property
+    //In case of mutiple forms provide the form name in the below attribute
+    //Ex:[SupplyParameterFromForm(FormName = "formServer")] 
+    //note : not needed when Server Interactivity is used
+    [SupplyParameterFromForm]
+    private Server? server { get; set; } //is bound to EditForm
+
+    protected override void OnParametersSet() //triggered when the component receives the parameter value from the url
+    {
+        server ??= ServerRepo.GetServerById(this.Id); //??= : if server is not null , the right side operation is not reached and is not overwritten OnSubmit
+    }
+
+    private void Submit()
+    {
+        if(server != null)
+        {
+            ServerRepo.UpdateServer(server.Id, server);
+        }
+        NavigationManager.NavigateTo("/servers",true);
+    }
+}

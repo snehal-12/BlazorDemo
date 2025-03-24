@@ -1,0 +1,26 @@
+﻿<div class="col">
+    <div class="card @(selectedCity.Equals(city, StringComparison.OrdinalIgnoreCase)?"border-primary":"") ">
+        <img src="@($"/Images/{city}.png")" class="card-img-top" alt="...">
+        <div class="card-body ">
+            <button type="button" class="btn btn-primary" @onclick="@(()=> { SelectCity(city); })"> @city </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] //used to provide data from parent(Citylist) to child component(city)
+    public string selectedCity { get; set; } = "Madison";
+
+    [Parameter]
+    public string city { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<string> SelectCityCallback { get; set; }
+
+    private void SelectCity( string cityName)
+    {
+        SelectCityCallback.InvokeAsync(cityName); //when this event is handled a callback is triggered and passing the info to callback. 
+        // when callback is triggered parent components registered callback handler here is triggered in parent component - citylistcomponent
+    }
+
+}

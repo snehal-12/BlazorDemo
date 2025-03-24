@@ -1,0 +1,130 @@
+﻿@inject NavigationManager NavigationManager
+
+@* <h3>ServerComponent</h3> *@
+@* this is non routable component as it does not have the '@page' directive *@
+@* <p> @status</p> *@
+
+@if (Server != null)
+{
+    @* <EditForm Model="server" FormName="serverCompForm" OnSubmit="ChangeStatus"> *@
+    /*using Enhance=true makes the page interactive i.e the page is partially rerendered*/
+    @* <EditForm Enhance="true" Model="server" FormName="serverCompForm" OnSubmit="ChangeStatus"> *@
+    @* <div data-name="@server.Name" data-status="Server is @(server.IsActive?"online":"offline")"
+             style="@($"color:{(server.IsActive?"green":"red")}")">
+            @server.Name is in @server.City and is @(server.IsActive ? "online" : "offline")
+            &nbsp;
+            <button type="button" class="btn btn-primary" @onclick="ChangeStatus"> Turn On/Off </button>
+        </div> *@
+    @* </EditForm> *@
+
+    <li @key="Server.Id" style="background-color:@GetBackgroundColor()">
+        @Server.Name in @Server.City is
+        <span style="color:@((Server.IsActive? "green" : "red"))">
+            @(Server.IsActive ? "online" : "offline")
+        </span>
+        &nbsp;
+
+        @if(Server.IsActive)
+        {
+            <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{Server.IsActive = false;})">Turn Off</button>            
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-success" @onclick="@(()=>{Server.IsActive = true;})">Turn On</button>           
+        }
+
+        &nbsp;
+        <a href="/Servers/@Server.Id" class="btn btn-link">Edit</a>
+        &nbsp;
+        <br />
+
+        @if (Server.IsActive)
+        {           
+            @* Random random = new();
+            int randomNum = random.Next(0, 500); *@
+            <text>@randomNum users are online</text>
+
+        }
+        else
+        {           
+            <text> N/A </text>
+        }
+        <br />
+
+        <EditForm Model="Server"
+        FormName="@($"form-Server-{Server.Id}")"
+        OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
+            <button type="submit" class="btn btn-primary">Delete</button>
+        </EditForm>
+    </li>
+    <br />
+}
+
+@code {
+    // private string status = "This is a non routable component as it does not have 'the@page' directive";
+    // [SupplyParameterFromForm]
+    [Parameter]
+    public Server? Server { get; set; } 
+
+    [CascadingParameter(Name = "SelectedCity")]
+    public string? SelectedCity { get; set; }
+
+    Random random = new();
+    int randomNum;
+
+    public ServerComponent()
+    {
+        this.randomNum = random.Next(0, 500); ;
+    }
+
+
+
+    @* protected override void OnParametersSet()
+    {
+        server ??= new Server { Name = "Server1", City = "Madison" };
+    } *@
+
+    // private void ChangeStatus()
+    // {
+    //     if(server != null)
+    //     server.IsActive = !server.IsActive;
+    // }
+
+    private void DeleteServer(int serverId)
+    {
+        if (serverId > 0)
+        {
+            ServerRepo.DeleteServer(serverId);
+            NavigationManager.NavigateTo("/servers", true); //true- forece reloads the page
+        }
+    }
+
+    private string GetBackgroundColor()
+    {
+        if (SelectedCity != null)
+        {
+            switch (this.SelectedCity)
+            {
+                case "Bishop":
+                    return "#d0e9f6";
+                case "Calhoun":
+                    return "#cce9f1";
+                case "Gadsden":
+                    return "#A4DDED";
+                case "Huntsville":
+                    return "#E1EBEE";
+                case "Madison":
+                    return "#F0F8FF";
+                case "WallaceSelma":
+                    return "#B9D9EB";
+                default: return "White";
+
+            }
+        }
+        else
+        {
+                return "white";
+        }
+        
+    }
+}
