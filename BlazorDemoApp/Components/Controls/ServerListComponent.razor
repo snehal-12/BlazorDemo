@@ -1,14 +1,73 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@inject NavigationManager NavigationManager
 
-@if(this.servers != null && this.servers.Count > 0)
+@if (this.servers != null && this.servers.Count > 0)
+{
+    <QuickGrid Items="servers.AsQueryable()">
+        <PropertyColumn Property="@(p => p.Name)" Sortable="true"></PropertyColumn>
+        <PropertyColumn Property="@(p => p.City)"></PropertyColumn>
+        <TemplateColumn Title="Status">
+            @if(context.IsActive )
+            {
+                <div style="color:green">
+                    Online
+                </div>
+            }
+            else
+            {
+                <div style="color:red">
+                    Offline
+                </div>
+            }
+        </TemplateColumn>
+        <TemplateColumn Title="OnlineUsers">
+            @if (context.IsActive)
+            {
+                Random random = new();
+                int randomNum = random.Next(0, 500);
+                <text>@randomNum users are online</text>
+            }
+            else
+            {
+                <text> N/A </text>
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            @if (context.IsActive)
+            {
+                <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{context.IsActive = false;})">Turn Off</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-success" @onclick="@(()=>{context.IsActive = true;})">Turn On</button>
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Servers/@context.Id" class="btn btn-link">Edit</a>
+        </TemplateColumn>
+        <TemplateColumn>
+            <ChildContent Context ="server">
+                <EditForm Model="server"
+                FormName="@($"form-Server-{server.Id}")"
+                OnValidSubmit="@(()=>{DeleteServer(server.Id);})">  @* explicit Razor syntax *@
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </EditForm>
+            </ChildContent>
+        </TemplateColumn>
+
+    </QuickGrid>
+
+}
+
+@* @if(this.servers != null && this.servers.Count > 0)
 {
     <ul class="list-unstyled">
         <Virtualize Items="this.servers" Context="server">@* //acts as a loop for a very long list with about 1000 items. items have to be same height*@
-            <ServerComponent Server="server"></ServerComponent>
-        </Virtualize>@* //used to improve performance of list rendering *@
-    </ul>
-    
-}
+@* <ServerComponent Server="server"></ServerComponent> *@
+@* </Virtualize> *@@* //used to improve performance of list rendering *@
+@*  </ul> *@
+@*     
+} *@ 
 
 
 @code {
@@ -28,7 +87,16 @@
         }
         else
             servers = ServerRepo.SearchServers(this.SearchFilter);
-        
+
+    }
+
+    private void DeleteServer(int serverId)
+    {
+        if (serverId > 0)
+        {
+            ServerRepo.DeleteServer(serverId);
+            NavigationManager.NavigateTo("/servers", true); //true- force reloads the page            
+        }
     }
     
 }
