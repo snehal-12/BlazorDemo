@@ -15,7 +15,7 @@
     public string city { get; set; } = "";
 
     [Parameter]
-    public EventCallback<string> SelectCityCallback { get; set; }
+    public EventCallback<string> SelectCityCallback { get; set; } //Eventcallback- struct, and is never null
 
     private void SelectCity( string cityName)
     {

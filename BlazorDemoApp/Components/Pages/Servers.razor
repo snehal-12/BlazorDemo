@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @* above page directive marks this component as routable *@
- 
+<PageTitle>Servers</PageTitle> 
 <h3>Servers</h3>
 <br/>
 <br/>
@@ -10,7 +10,7 @@
 <CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"></CityListComponent>
 <br />
 <br />
-    
+
 <ServerSearchComponent @ref="searchComponent" SearchServerCallback="HandleSearchServer"></ServerSearchComponent>
 @*  @serverFilter *@
 <br/>
@@ -20,11 +20,11 @@
 @* <ServerComponent></ServerComponent> *@    
 
 <CascadingValue Name="SelectedCity" Value="@selectedCity">  @* used to pass value from parent component to a particular child component *@
-	<ServerListComponent 
-		@rendermode="InteractiveServer" 
-		CityName="@this.selectedCity"
-		SearchFilter="@searchFilter">
-	</ServerListComponent>   @* //child component *@    
+    <ServerListComponent 
+    @rendermode="InteractiveServer" 
+    CityName="@this.selectedCity"
+    SearchFilter="@searchFilter">
+    </ServerListComponent>   @* //child component *@    
 </CascadingValue>
 <br />
 
@@ -32,7 +32,6 @@
 
 
 @code {
-
     // private List<String> cities = CitiesRepo.GetCities();
     private string? selectedCity = "Madison";
     // public List<Server>? servers;
@@ -54,12 +53,11 @@
         this.searchFilter = string.Empty;
 
         searchComponent?.ClearSearchFilter(); //Clear the search bar
-
     }
+
     private void HandleSearchServer(string searchFilter)
     {
         this.searchFilter = searchFilter;
         cityListComponent?.ClearSelection(); //clears city (no longer highlighted) by referncing child component using @ref
-
     }
 }

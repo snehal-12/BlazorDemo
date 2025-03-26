@@ -5,31 +5,27 @@
 <div>
     @* <EditForm Model="server" FormName="addServer" OnValidSubmit="Add"> *@
         @* //when using interactivity we do not need to have form name *@
-        <EditForm Model="server"  OnValidSubmit="Add">
+    <EditForm Model="server"  OnValidSubmit="Add">
         <DataAnnotationsValidator></DataAnnotationsValidator>
 
-        <div class="row mb-3">
-            <div class="col-2">
-                <label class="col-form-label">Name</label>
-            </div>
-            <div class="col-6">
+        <FieldComponent Label="Name">
+            <Control>
                 <InputText @bind-Value="server.Name" class="form-control"></InputText>
-            </div>
-            <div class="col">
+            </Control>
+            <ValidationMessageControl>
                 <ValidationMessage For="()=>server.Name"></ValidationMessage> @*validation Message displays message next to the field*@
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-2">
-                <label class="col-form-label">City</label>
-            </div>
-            <div class="col-6">
+            </ValidationMessageControl>
+        </FieldComponent>
+
+        <FieldComponent Label="City">
+            <Control>
                 <InputText @bind-Value="server.City" class="form-control"></InputText>
-            </div>
-            <div class="col">
-                <ValidationMessage For="()=>server.City"></ValidationMessage>
-            </div>
-        </div>
+            </Control>
+            <ValidationMessageControl>
+                <ValidationMessage For="()=>server.City"></ValidationMessage> @*validation Message displays message next to the field*@
+            </ValidationMessageControl>
+        </FieldComponent>
+        
         <button class="btn btn-primary" type="submit">Save</button>
         &nbsp;
         <a href="/servers" class="btn btn-primary">Cancel</a>

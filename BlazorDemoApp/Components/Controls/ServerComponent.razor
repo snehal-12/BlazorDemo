@@ -52,8 +52,8 @@
         <br />
 
         <EditForm Model="Server"
-        FormName="@($"form-Server-{Server.Id}")"
-        OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
+            FormName="@($"form-Server-{Server.Id}")"
+            OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
             <button type="submit" class="btn btn-primary">Delete</button>
         </EditForm>
     </li>
@@ -76,8 +76,6 @@
     {
         this.randomNum = random.Next(0, 500); ;
     }
-
-
 
     @* protected override void OnParametersSet()
     {
@@ -123,8 +121,7 @@
         }
         else
         {
-                return "white";
+            return "white";
         }
-        
     }
 }
