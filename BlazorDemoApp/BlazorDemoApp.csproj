@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Blazorise" Version="1.7.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.13" />
   </ItemGroup>
 
 </Project>
