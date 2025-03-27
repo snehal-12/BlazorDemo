@@ -7,9 +7,9 @@
             "Madison",
             "Huntsville",
             "Gadsden",
-            "WallaceSelma",
-            "Calhoun",
-            "Bishop"
+            "Selma",
+            "Decatur",
+            "Mobile"
         };
 
         public static List<string> GetCities () => cities;
