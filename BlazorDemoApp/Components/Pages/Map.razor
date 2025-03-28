@@ -1,0 +1,19 @@
+﻿@page "/map"
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<h3>🗺️ My Map</h3>
+<div id="map" style="width: 100%; height: 500px; background-color: lightgray;"></div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("📡 Calling loadMap function...");
+
+            // Ensure map.js function is invoked after render
+            await JS.InvokeVoidAsync("loadMap");
+        }
+    }
+}
