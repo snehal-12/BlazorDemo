@@ -1,5 +1,4 @@
-﻿@implements IDisposable
-@* To use Dispose method *@
+﻿
 @if ( cities != null && cities.Count > 0)
 {
     <div class="container-fluid text-center" >
@@ -39,41 +38,5 @@
         selectedCity = cityName;
         // this.servers = ServerRepo.GetServersByCity(selectedCity);
         SelectCityCallback.InvokeAsync(cityName);
-    }
-
-    public override Task SetParametersAsync(ParameterView parameters)
-    {
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent:{nameof(SetParametersAsync)}.{guid}");
-        return base.SetParametersAsync(parameters);
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent:{nameof(OnInitialized)}.{guid}");
-    }
-
-    protected override void OnParametersSet()
-    {
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent:{nameof(OnParametersSet)}.{guid}");
-        base.OnParametersSet();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent:{nameof(OnAfterRender)}.{guid}");
-        base.OnAfterRender(firstRender);
-    }
-
-    public void Dispose()
-    {
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent:{nameof(Dispose)}.{guid}");
-    }
-
+    }    
 }

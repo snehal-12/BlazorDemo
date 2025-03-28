@@ -1,5 +1,6 @@
 ﻿@page "/map"
-@inject IJSRuntime JS
+@inject IJSRuntime JS  
+@* -- to activate javaScript Interop *@
 @rendermode InteractiveServer
 
 <h3>🗺️ My Map</h3>
@@ -10,7 +11,7 @@
     {
         if (firstRender)
         {
-            Console.WriteLine("📡 Calling loadMap function...");
+            Console.WriteLine("Calling loadMap function...");
 
             // Ensure map.js function is invoked after render
             await JS.InvokeVoidAsync("loadMap");

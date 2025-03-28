@@ -1,5 +1,13 @@
 ﻿@page "/servers/{id:int}"
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<NavigationLock
+OnBeforeInternalNavigation="OnBeforeInternalNavigation"
+ConfirmExternalNavigation="true">
+</NavigationLock>
+
 <h3>Edit Server</h3>
 <div>
     @if(server != null)
@@ -24,7 +32,7 @@
                 </Control>
                 <ValidationMessageControl>
                     <ValidationMessage For="()=>server.City"></ValidationMessage> @*validation Message displays message next to the field*@                
-                    </ValidationMessageControl>
+                </ValidationMessageControl>
             </FieldComponent>
 
             <FieldComponent Label="IsActive">
@@ -32,13 +40,13 @@
                     <InputCheckbox @bind-Value="server.IsActive" class="form-check-input"></InputCheckbox>
                 </Control>               
             </FieldComponent>    
-            
+
             <button class="btn btn-primary" type="submit">Update</button>
             &nbsp;
             <a href="/servers" class="btn btn-primary">Close</a>            
         </EditForm>       
     }
-    
+
 </div>
 @code {
     [Parameter] //Route parameter received in the url
@@ -64,5 +72,14 @@
             ServerRepo.UpdateServer(server.Id, server);
         }
         NavigationManager.NavigateTo("/servers",true);
+    }
+    private async Task OnBeforeInternalNavigation(LocationChangingContext args)
+    {
+        //for this to work set render mode to Interactive Server in <Routes> in app.razor
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to leave this page?");
+        if(!isConfirmed)
+        {
+            args.PreventNavigation();
+        }
     }
 }
