@@ -22,7 +22,8 @@
     [Parameter]
     public EventCallback<string> SelectCityCallback { get; set; }
 
-    private string? selectedCity = "Madison";
+    [Parameter]
+    public string? selectedCity { get; set; } = "Madison";
 
     private List<String> cities = CitiesRepo.GetCities();
 

@@ -95,7 +95,7 @@
         if (serverId > 0)
         {
             ServerRepo.DeleteServer(serverId);
-            NavigationManager.NavigateTo("/servers", true); //true- force reloads the page            
+            NavigationManager.NavigateTo($"/servers/back_from/{this.CityName}", true); //true- force reloads the page
         }
     }
     

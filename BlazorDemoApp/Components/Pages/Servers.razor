@@ -1,4 +1,5 @@
 ﻿@page "/servers" 
+@page "/servers/back_from/{cityName}"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @* above page directive marks this component as routable *@
@@ -7,7 +8,10 @@
 <br/>
 <br/>
 
-<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"></CityListComponent>
+<CityListComponent @ref="cityListComponent" 
+    SelectCityCallback="HandleCitySelection"
+    selectedCity = "@this.selectedCity">
+</CityListComponent>
 <br />
 <br />
 
@@ -32,6 +36,8 @@
 
 
 @code {
+    [Parameter]
+    public string? CityName { get; set; }
     // private List<String> cities = CitiesRepo.GetCities();
     private string? selectedCity = "Madison";
     // public List<Server>? servers;
@@ -59,5 +65,17 @@
     {
         this.searchFilter = searchFilter;
         cityListComponent?.ClearSelection(); //clears city (no longer highlighted) by referncing child component using @ref
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (NavigationManager.Uri.Contains("back_from") && !string.IsNullOrWhiteSpace(CityName))
+            {
+                selectedCity = CityName;
+                StateHasChanged();
+            }
+        }
     }
 }

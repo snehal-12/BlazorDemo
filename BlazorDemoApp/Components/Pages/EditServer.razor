@@ -3,10 +3,10 @@
 @inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
-<NavigationLock
+@* <NavigationLock
 OnBeforeInternalNavigation="OnBeforeInternalNavigation"
 ConfirmExternalNavigation="true">
-</NavigationLock>
+</NavigationLock> *@
 
 <h3>Edit Server</h3>
 <div>
@@ -71,15 +71,15 @@ ConfirmExternalNavigation="true">
         {
             ServerRepo.UpdateServer(server.Id, server);
         }
-        NavigationManager.NavigateTo("/servers",true);
+        NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
     }
-    private async Task OnBeforeInternalNavigation(LocationChangingContext args)
-    {
-        //for this to work set render mode to Interactive Server in <Routes> in app.razor
-        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to leave this page?");
-        if(!isConfirmed)
-        {
-            args.PreventNavigation();
-        }
-    }
+    // private async Task OnBeforeInternalNavigation(LocationChangingContext args)
+    // {
+    //     //for this to work set render mode to Interactive Server in <Routes> in app.razor
+    //     var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to leave this page?");
+    //     if(!isConfirmed)
+    //     {
+    //         args.PreventNavigation();
+    //     }
+    // }
 }
