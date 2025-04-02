@@ -1,8 +1,9 @@
 ﻿@page "/servers" 
+@* above page directive marks this component as routable *@
 @page "/servers/back_from/{cityName}"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@* above page directive marks this component as routable *@
+
 <PageTitle>Servers</PageTitle> 
 <h3>Servers</h3>
 <br/>
@@ -32,7 +33,8 @@
 </CascadingValue>
 <br />
 
-<a href="/servers/add" class="btn btn-primary">Add Server</a>    
+@* <a href="/servers/add" class="btn btn-primary">Add Server</a> *@
+<a href="/servername" class="btn btn-primary">Add Server</a>
 
 
 @code {

@@ -1,0 +1,64 @@
+﻿@page "/cityname"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+<h2>City Name</h2>
+<br />
+
+<FieldComponent Label="City Name">
+    <Control>
+        <input type="text" @bind-value="cityName" class="form-control"/>
+    </Control>
+</FieldComponent>
+<br />
+<button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+
+@code {
+    private string? cityName;
+
+    private string? errorMessage;
+
+    [SupplyParameterFromQuery] // receive server name from SetServerName
+    public string? ServerName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (string.IsNullOrWhiteSpace(ServerName))
+            {
+                this.errorMessage = "Server Name was not provided.";
+                StateHasChanged();
+            }            
+        }
+    }
+    private void GoNext()
+    {
+        if (string.IsNullOrWhiteSpace(ServerName))
+        {
+            this.errorMessage = "Server Name was not provided.";            
+        }
+        else if (string.IsNullOrWhiteSpace(cityName))
+        {
+            this.errorMessage = "City name is required.";
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/serverstatus?servername={ServerName}&cityname={cityName}");
+        }
+    }
+}

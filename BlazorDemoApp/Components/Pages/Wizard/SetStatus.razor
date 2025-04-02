@@ -1,0 +1,76 @@
+﻿@page "/serverstatus"
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h2>SetStatus</h2>
+<br />
+
+<FieldComponent Label="Server Status">
+    <Control>        
+        <input type="checkbox" @bind-value="isOnline"
+        checked class="form-check-input">
+        </input>
+    </Control>
+</FieldComponent>
+<br />
+<button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+
+@code {
+    private bool isOnline;
+
+    private string? errorMessage;
+
+    [SupplyParameterFromQuery] // receive server name from SetCityName
+    public string? ServerName { get; set; }
+
+    [SupplyParameterFromQuery] // receive server name from SetCityName
+    public string? CityName { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (string.IsNullOrWhiteSpace(ServerName))
+            {
+                this.errorMessage = "Server Name was not provided.";
+                StateHasChanged();
+            }
+            else if (string.IsNullOrWhiteSpace(CityName))
+            {
+                this.errorMessage = "City Name was not provided.";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void Save()
+    {
+        if (string.IsNullOrWhiteSpace(ServerName))
+        {
+            this.errorMessage = "Server Name was not provided.";
+            return;
+        }
+        else if (string.IsNullOrWhiteSpace(CityName))
+        {
+            this.errorMessage = "City Name was not provided.";
+            return;
+        }
+        var server = new Server
+            {
+                Name = this.ServerName,
+                City = this.CityName,
+                IsActive = this.isOnline
+            };
+        ServerRepo.AddServer(server);
+        NavigationManager.NavigateTo($"/servers/back_from/{CityName}");
+    }
+}
