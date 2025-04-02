@@ -1,18 +1,23 @@
 ﻿@page "/servername"
+@using BlazorDemoApp.StateStore
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject SessionStorage sessionStorage
 
 <h2>Server Name</h2>
 <br />
 
-<FieldComponent Label="Name">
-    <Control>
-        <input type="text" @bind-value="serverName" class="form-control"/>
-    </Control>
-</FieldComponent>
-<br />
-<button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+@if (server is not null)
+{
+    <FieldComponent Label="Name">
+        <Control>
+            <input type="text" @bind-value="server.Name" class="form-control" />
+        </Control>
+    </FieldComponent>
+    <br />
+    <button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+}
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
@@ -23,7 +28,7 @@
 
 
 @code {
-    private string? serverName;
+    private Server? server;
 
     private string? errorMessage;
 
@@ -31,15 +36,29 @@
     {
         base.OnInitialized();
     }
-    private void GoNext()
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        if (string.IsNullOrWhiteSpace(serverName))
+        if (firstRender)
         {
-            this.errorMessage = "Server name is required.";
+            server = new Server();
+            StateHasChanged();
         }
-        else
+    }
+
+    private async Task GoNext()
+    {
+        if (server is not null)
         {
-            NavigationManager.NavigateTo($"/cityname?servername={serverName}"); //collect server name in the query string
-        }
+            if (string.IsNullOrWhiteSpace(server.Name))
+            {
+                this.errorMessage = "Server name is required.";
+            }
+            else
+            {
+                await sessionStorage.SetServerAsync(server);
+                NavigationManager.NavigateTo($"/cityname?"); //collect server name in the query string
+            }
+        }        
     }
 }

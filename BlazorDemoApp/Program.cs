@@ -1,4 +1,5 @@
 using BlazorDemoApp.Components;
+using BlazorDemoApp.StateStore;
 using Blazorise;
 using Blazorise.Icons.FontAwesome;
 
@@ -10,6 +11,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddBlazorise(Options=> { Options.Immediate=true; })
     .AddFontAwesomeIcons();
+
+builder.Services.AddTransient<SessionStorage>();
 
 var app = builder.Build();
 
