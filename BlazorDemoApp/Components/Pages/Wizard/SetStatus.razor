@@ -4,7 +4,7 @@
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@inject SessionStorage sessionStorage
+@inject ContainerStorage containerStorage
 
 <h2>SetStatus</h2>
 <br />
@@ -22,33 +22,23 @@
     <button type="button" class="btn btn-primary" @onclick="Save">Save</button>
 }
 
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <div class="alert alert-danger">
-        @errorMessage
-    </div>
-}
-
-
 @code {
-    private Server? server;
+    private Server? server;      
 
-    private string? errorMessage;    
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            this.server = await this.sessionStorage.GetServerAsync();
+            this.server =  this.containerStorage.GetServer();
             StateHasChanged();
         }
     }
 
-    private async Task Save()
+    private void Save()
     {
-        if( server is not null)
+        if(server is not null)
         {
-            await sessionStorage.SetServerAsync(null);
+            containerStorage.SetServer(null);
             ServerRepo.AddServer(server);
             NavigationManager.NavigateTo($"/servers/back_from/{this.server.City}");
         }        

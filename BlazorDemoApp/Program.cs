@@ -12,7 +12,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddBlazorise(Options=> { Options.Immediate=true; })
     .AddFontAwesomeIcons();
 
-builder.Services.AddTransient<SessionStorage>();
+//builder.Services.AddTransient<SessionStorage>();
+builder.Services.AddScoped<ContainerStorage>();
 
 var app = builder.Build();
 

@@ -5,7 +5,8 @@
 @rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
-@inject SessionStorage sessionStorage
+@inject ContainerStorage containerStorage
+
 <h2>City Name</h2>
 <br />
 
@@ -19,6 +20,7 @@
     <br />
     <button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
 }
+<br />
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
@@ -38,15 +40,15 @@
         base.OnInitialized();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            this.server = await this.sessionStorage.GetServerAsync();
+            this.server = this.containerStorage.GetServer();
             StateHasChanged();                       
         }
     }
-    private async Task GoNext()
+    private void GoNext()
     {
         if (server is not null)
         {
@@ -56,7 +58,7 @@
             }
             else
             {
-                await sessionStorage.SetServerAsync(server);
+                containerStorage.SetServer(server);
                 NavigationManager.NavigateTo($"/serverstatus");
             }
         }
