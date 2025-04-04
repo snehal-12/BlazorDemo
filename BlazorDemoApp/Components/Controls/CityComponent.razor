@@ -1,8 +1,42 @@
-﻿<div class="col">
+﻿@using BlazorDemoApp.StateStore
+
+@inject MadisonOnlineServerStore MadisonOnlineServerStore
+@inject HuntsvilleOnlineServerStore HuntsvilleOnlineServerStore
+@inject DecaturOnlineServerStore DecaturOnlineServerStore
+@inject GadsdenOnlineServerStore GadsdenOnlineServerStore
+@inject SelmaOnlineServerStore SelmaOnlineServerStore
+@inject MobileOnlineServerStore MobileOnlineServerStore
+
+@implements IDisposable
+
+<div class="col">
     <div class="card @(selectedCity.Equals(city, StringComparison.OrdinalIgnoreCase)?"border-primary":"") ">
         <img src="@($"/Images/{city}.png")" class="card-img-top" alt="...">
         <div class="card-body ">
             <button type="button" class="btn btn-primary" @onclick="@(()=> { SelectCity(city); })"> @city </button>
+        </div>
+        <div>
+            @switch (city)
+            {
+                case "Madison":
+                    <text>@numberServersOnlineMadison</text>
+                    break;
+                case "Huntsville":
+                    <text>@numberServersOnlineHuntsville</text>
+                    break;
+                case "Gadsden":
+                    <text>@numberServersOnlineGadsden</text>
+                    break;
+                case "Selma":
+                    <text>@numberServersOnlineSelma</text>
+                    break;
+                case "Decatur":
+                    <text>@numberServersOnlineDecatur</text>
+                    break;
+                case "Mobile":
+                    <text>@numberServersOnlineMobile</text>
+                    break;
+            }
         </div>
     </div>
 </div>
@@ -17,10 +51,113 @@
     [Parameter]
     public EventCallback<string> SelectCityCallback { get; set; } //Eventcallback- struct, and is never null
 
+    private int numberServersOnlineMadison;
+    private int numberServersOnlineHuntsville;
+    private int numberServersOnlineDecatur;
+    private int numberServersOnlineGadsden;
+    private int numberServersOnlineSelma;
+    private int numberServersOnlineMobile;
+
     private void SelectCity( string cityName)
     {
         SelectCityCallback.InvokeAsync(cityName); //when this event is handled a callback is triggered and passing the info to callback. 
         // when callback is triggered parent components registered callback handler here is triggered in parent component - citylistcomponent
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            switch (city)
+            {
+                case "Madison":
+                    numberServersOnlineMadison = MadisonOnlineServerStore.GetNumberServersOnline();
+                    MadisonOnlineServerStore.AddStateChangeListeners(OnMadisonServersStatusChange);
+                    break;
+                case "Huntsville":
+                    numberServersOnlineHuntsville = HuntsvilleOnlineServerStore.GetNumberServersOnline();
+                    HuntsvilleOnlineServerStore.AddStateChangeListeners(OnHuntsvilleServersStatusChange);
+                    break;
+                case "Decatur":
+                    numberServersOnlineDecatur = DecaturOnlineServerStore.GetNumberServersOnline();
+                    DecaturOnlineServerStore.AddStateChangeListeners(OnDecaturServersStatusChange);
+                    break;
+                case "Gadsden":
+                    numberServersOnlineGadsden = GadsdenOnlineServerStore.GetNumberServersOnline();
+                    GadsdenOnlineServerStore.AddStateChangeListeners(OnGadsdenServersStatusChange);
+                    break;
+                case "Selma":
+                    numberServersOnlineSelma = SelmaOnlineServerStore.GetNumberServersOnline();
+                    SelmaOnlineServerStore.AddStateChangeListeners(OnSelmaServersStatusChange);
+                    break;
+                case "Mobile":
+                    numberServersOnlineMobile = MobileOnlineServerStore.GetNumberServersOnline();
+                    MobileOnlineServerStore.AddStateChangeListeners(OnMobileServersStatusChange);
+                    break;
+            }
+            StateHasChanged();
+        }
+    }
+
+    private void OnMadisonServersStatusChange()
+    {
+        numberServersOnlineMadison = MadisonOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    private void OnHuntsvilleServersStatusChange()
+    {
+        numberServersOnlineHuntsville = HuntsvilleOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    private void OnDecaturServersStatusChange()
+    {
+        numberServersOnlineDecatur = DecaturOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    private void OnGadsdenServersStatusChange()
+    {
+        numberServersOnlineGadsden = GadsdenOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    private void OnSelmaServersStatusChange()
+    {
+        numberServersOnlineSelma = SelmaOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    private void OnMobileServersStatusChange()
+    {
+        numberServersOnlineMobile = MobileOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        switch (city)
+        {
+            case "Madison":
+                MadisonOnlineServerStore.RemoveStateChangeListeners(OnMadisonServersStatusChange);
+                break;
+            case "Huntsville":
+                HuntsvilleOnlineServerStore.RemoveStateChangeListeners(OnHuntsvilleServersStatusChange);
+                break;
+            case "Decatur":
+                DecaturOnlineServerStore.RemoveStateChangeListeners(OnDecaturServersStatusChange);
+                break;
+            case "Gadsden":
+                GadsdenOnlineServerStore.RemoveStateChangeListeners(OnGadsdenServersStatusChange);
+                break;
+            case "Selma":
+                SelmaOnlineServerStore.RemoveStateChangeListeners(OnSelmaServersStatusChange);
+                break;
+            case "Mobile":
+                MobileOnlineServerStore.RemoveStateChangeListeners(OnMobileServersStatusChange);
+                break;
+        }
+       
+    }
 }

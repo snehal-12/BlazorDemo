@@ -1,4 +1,11 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using BlazorDemoApp.StateStore
+@inject NavigationManager NavigationManager
+@inject MadisonOnlineServerStore MadisonOnlineServerStore
+@inject HuntsvilleOnlineServerStore HuntsvilleOnlineServerStore
+@inject DecaturOnlineServerStore DecaturOnlineServerStore
+@inject GadsdenOnlineServerStore GadsdenOnlineServerStore
+@inject SelmaOnlineServerStore SelmaOnlineServerStore
+@inject MobileOnlineServerStore MobileOnlineServerStore
 
 @* <h3>ServerComponent</h3> *@
 @* this is non routable component as it does not have the '@page' directive *@
@@ -26,11 +33,11 @@
 
         @if(Server.IsActive)
         {
-            <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{Server.IsActive = false;})">Turn Off</button>            
+            <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{SetServerStatus(false);})">Turn Off</button>            
         }
         else
         {
-            <button type="button" class="btn btn-outline-success" @onclick="@(()=>{Server.IsActive = true;})">Turn On</button>           
+            <button type="button" class="btn btn-outline-success" @onclick="@(()=>{SetServerStatus(true);})">Turn On</button>           
         }
 
         &nbsp;
@@ -52,8 +59,8 @@
         <br />
 
         <EditForm Model="Server"
-            FormName="@($"form-Server-{Server.Id}")"
-            OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
+        FormName="@($"form-Server-{Server.Id}")"
+        OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
             <button type="submit" class="btn btn-primary">Delete</button>
         </EditForm>
     </li>
@@ -103,9 +110,9 @@
         {
             switch (this.SelectedCity)
             {
-                case "Bishop":
+                case "Mobile":
                     return "#d0e9f6";
-                case "Calhoun":
+                case "Decatur":
                     return "#cce9f1";
                 case "Gadsden":
                     return "#A4DDED";
@@ -113,7 +120,7 @@
                     return "#E1EBEE";
                 case "Madison":
                     return "#F0F8FF";
-                case "WallaceSelma":
+                case "Selma":
                     return "#B9D9EB";
                 default: return "White";
 
@@ -122,6 +129,62 @@
         else
         {
             return "white";
+        }
+    }
+
+    private void SetServerStatus(bool status)
+    {
+        if(this.Server is not null && this.Server.IsActive != status)
+        {
+            int num = 0;
+            switch (this.Server.City)
+            {
+                case "Madison":
+                    num = MadisonOnlineServerStore.GetNumberServersOnline();
+                    if (status)                    
+                        MadisonOnlineServerStore.SetNumberServersOnline(num + 1);                    
+                    else                    
+                        MadisonOnlineServerStore.SetNumberServersOnline(num - 1);                    
+                    break;
+                case "Huntsville":
+                    num = HuntsvilleOnlineServerStore.GetNumberServersOnline();
+                    if (status)                   
+                        HuntsvilleOnlineServerStore.SetNumberServersOnline(num + 1);                    
+                    else                    
+                        HuntsvilleOnlineServerStore.SetNumberServersOnline(num - 1);                   
+                    break;
+                case "Decatur":
+                    num = DecaturOnlineServerStore.GetNumberServersOnline();
+                    if (status)
+                        DecaturOnlineServerStore.SetNumberServersOnline(num + 1);
+                    else
+                        DecaturOnlineServerStore.SetNumberServersOnline(num - 1);
+                    break;
+                case "Gadsden":
+                    num = GadsdenOnlineServerStore.GetNumberServersOnline();
+                    if (status)
+                        GadsdenOnlineServerStore.SetNumberServersOnline(num + 1);
+                    else
+                        GadsdenOnlineServerStore.SetNumberServersOnline(num - 1);
+                    break;
+                case "Selma":
+                    num = SelmaOnlineServerStore.GetNumberServersOnline();
+                    if (status)
+                        SelmaOnlineServerStore.SetNumberServersOnline(num + 1);
+                    else
+                        SelmaOnlineServerStore.SetNumberServersOnline(num - 1);
+                    break;
+                case "Mobile":
+                    num = MobileOnlineServerStore.GetNumberServersOnline();
+                    if (status)
+                        MobileOnlineServerStore.SetNumberServersOnline(num + 1);
+                    else
+                        MobileOnlineServerStore.SetNumberServersOnline(num - 1);
+                    break;
+                
+            }
+            
+            this.Server.IsActive = status;
         }
     }
 }

@@ -1,8 +1,18 @@
 ﻿@page "/servers" 
 @* above page directive marks this component as routable *@
 @page "/servers/back_from/{cityName}"
+
+@using BlazorDemoApp.StateStore
+
 @rendermode InteractiveServer
+
 @inject NavigationManager NavigationManager
+@inject MadisonOnlineServerStore MadisonOnlineServerStore
+@inject HuntsvilleOnlineServerStore HuntsvilleOnlineServerStore
+@inject DecaturOnlineServerStore DecaturOnlineServerStore
+@inject GadsdenOnlineServerStore GadsdenOnlineServerStore
+@inject SelmaOnlineServerStore SelmaOnlineServerStore
+@inject MobileOnlineServerStore MobileOnlineServerStore
 
 <PageTitle>Servers</PageTitle> 
 <h3>Servers</h3>
@@ -10,8 +20,8 @@
 <br/>
 
 <CityListComponent @ref="cityListComponent" 
-    SelectCityCallback="HandleCitySelection"
-    selectedCity = "@this.selectedCity">
+SelectCityCallback="HandleCitySelection"
+selectedCity = "@this.selectedCity">
 </CityListComponent>
 <br />
 <br />
@@ -77,6 +87,38 @@
             {
                 selectedCity = CityName;
                 StateHasChanged();
+            }
+
+
+            var madServers = ServerRepo.GetServersByCity("Madison");
+            if (madServers != null)
+            {
+                MadisonOnlineServerStore.SetNumberServersOnline(madServers.Count(x => x.IsActive));
+            }
+            var huntsServers = ServerRepo.GetServersByCity("Huntsville");
+            if (huntsServers != null)
+            {
+                HuntsvilleOnlineServerStore.SetNumberServersOnline(huntsServers.Count(x => x.IsActive));
+            }
+            var decServers = ServerRepo.GetServersByCity("Decatur");
+            if (decServers != null)
+            {
+                DecaturOnlineServerStore.SetNumberServersOnline(decServers.Count(x => x.IsActive));
+            }
+            var gadServers = ServerRepo.GetServersByCity("Gadsden");
+            if (gadServers != null)
+            {
+                GadsdenOnlineServerStore.SetNumberServersOnline(gadServers.Count(x => x.IsActive));
+            }
+            var selServers = ServerRepo.GetServersByCity("Selma");
+            if (selServers != null)
+            {
+                SelmaOnlineServerStore.SetNumberServersOnline(selServers.Count(x => x.IsActive));
+            }
+            var mobServers = ServerRepo.GetServersByCity("Mobile");
+            if (mobServers != null)
+            {
+                MobileOnlineServerStore.SetNumberServersOnline(mobServers.Count(x => x.IsActive));
             }
         }
     }

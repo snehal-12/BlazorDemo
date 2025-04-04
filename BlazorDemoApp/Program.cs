@@ -14,6 +14,12 @@ builder.Services.AddBlazorise(Options=> { Options.Immediate=true; })
 
 //builder.Services.AddTransient<SessionStorage>();
 builder.Services.AddScoped<ContainerStorage>();
+builder.Services.AddScoped<MadisonOnlineServerStore>();
+builder.Services.AddScoped<HuntsvilleOnlineServerStore>();
+builder.Services.AddScoped<DecaturOnlineServerStore>();
+builder.Services.AddScoped<GadsdenOnlineServerStore>();
+builder.Services.AddScoped<SelmaOnlineServerStore>();
+builder.Services.AddScoped<MobileOnlineServerStore>();
 
 var app = builder.Build();
 
