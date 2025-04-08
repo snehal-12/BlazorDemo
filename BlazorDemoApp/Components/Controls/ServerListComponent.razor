@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.QuickGrid
 @inject NavigationManager NavigationManager
 
-@if (this.servers != null && this.servers.Count > 0)
+@* @if (this.servers != null && this.servers.Count > 0)
 {
     <QuickGrid Items="servers.AsQueryable()">
         <PropertyColumn Property="@(p => p.Name)" Sortable="true"></PropertyColumn>
@@ -50,24 +50,49 @@
                 <EditForm Model="server"
                 FormName="@($"form-Server-{server.Id}")"
                 OnValidSubmit="@(()=>{DeleteServer(server.Id);})">  @* explicit Razor syntax *@
-                    <button type="submit" class="btn btn-primary">Delete</button>
-                </EditForm>
+                    @* <button type="submit" class="btn btn-primary">Delete</button> *@
+               @*  </EditForm>
             </ChildContent>
         </TemplateColumn>
 
-    </QuickGrid>
+    </QuickGrid> *@
 
-}
+@*} *@
 
-@* @if(this.servers != null && this.servers.Count > 0)
+@if (servers is null)
 {
-    <ul class="list-unstyled">
-        <Virtualize Items="this.servers" Context="server">@* //acts as a loop for a very long list with about 1000 items. items have to be same height*@
-@* <ServerComponent Server="server"></ServerComponent> *@
-@* </Virtualize> *@@* //used to improve performance of list rendering *@
-@*  </ul> *@
-@*     
-} *@ 
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <RepeaterComponent Items="servers">
+            <Header>
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        People Online
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            </Header>
+            <Row Context="server">
+                <ServerComponent Server="server"></ServerComponent>
+            </Row>
+        </RepeaterComponent>
+    </table>
+} 
 
 
 @code {
@@ -90,13 +115,13 @@
 
     }
 
-    private void DeleteServer(int serverId)
-    {
-        if (serverId > 0)
-        {
-            ServerRepo.DeleteServer(serverId);
-            NavigationManager.NavigateTo($"/servers/back_from/{this.CityName}", true); //true- force reloads the page
-        }
-    }
+    // private void DeleteServer(int serverId)
+    // {
+    //     if (serverId > 0)
+    //     {
+    //         ServerRepo.DeleteServer(serverId);
+    //         NavigationManager.NavigateTo($"/servers/back_from/{this.CityName}", true); //true- force reloads the page
+    //     }
+    // }
     
 }

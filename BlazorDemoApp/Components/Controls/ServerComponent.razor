@@ -24,47 +24,46 @@
         </div> *@
     @* </EditForm> *@
 
-    <li @key="Server.Id" style="background-color:@GetBackgroundColor()">
-        @Server.Name in @Server.City is
-        <span style="color:@((Server.IsActive? "green" : "red"))">
+    <tr  style="background-color:@GetBackgroundColor()">
+        <td>@Server.Name</td>
+        <td>@Server.City</td>
+
+        <td style="color:@((Server.IsActive? "green" : "red"))">
             @(Server.IsActive ? "online" : "offline")
-        </span>
-        &nbsp;
-
-        @if(Server.IsActive)
-        {
-            <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{SetServerStatus(false);})">Turn Off</button>            
-        }
-        else
-        {
-            <button type="button" class="btn btn-outline-success" @onclick="@(()=>{SetServerStatus(true);})">Turn On</button>           
-        }
-
-        &nbsp;
-        <a href="/Servers/@Server.Id" class="btn btn-link">Edit</a>
-        &nbsp;
-        <br />
-
-        @if (Server.IsActive)
-        {           
-            @* Random random = new();
+        </td>
+        <td>
+            @if (Server.IsActive)
+            {
+                @* Random random = new();
             int randomNum = random.Next(0, 500); *@
-            <text>@randomNum users are online</text>
+                <text>@randomNum users are online</text>
 
-        }
-        else
-        {           
-            <text> N/A </text>
-        }
-        <br />
-
-        <EditForm Model="Server"
-        FormName="@($"form-Server-{Server.Id}")"
-        OnValidSubmit="@(()=>{DeleteServer(Server.Id);})"> @* explicit Razor syntax *@
-            <button type="submit" class="btn btn-primary">Delete</button>
-        </EditForm>
-    </li>
-    <br />
+            }
+            else
+            {
+                <text> N/A </text>
+            }
+        </td>
+        <td>
+            @if (Server.IsActive)
+            {
+                <button type="button" class="btn btn-outline-danger" @onclick="@(()=>{SetServerStatus(false);})">Turn Off</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-success" @onclick="@(()=>{SetServerStatus(true);})">Turn On</button>
+            }
+            &nbsp;
+            <a href="/Servers/@Server.Id" class="btn btn-outline-primary">Edit</a>
+        </td>
+        <td>
+            <EditForm Model="Server"
+            FormName="@($"form-Server-{Server.Id}")"
+            OnValidSubmit="@(()=>{DeleteServer(Server.Id);})">  @* explicit Razor syntax *@
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </EditForm>
+        </td>        
+    </tr>
 }
 
 @code {
@@ -100,7 +99,7 @@
         if (serverId > 0)
         {
             ServerRepo.DeleteServer(serverId);
-            NavigationManager.NavigateTo("/servers", true); //true- forece reloads the page
+            NavigationManager.NavigateTo($"/servers/back_from/{this.SelectedCity}", true); //true- forece reloads the page
         }
     }
 
@@ -134,57 +133,63 @@
 
     private void SetServerStatus(bool status)
     {
-        if(this.Server is not null && this.Server.IsActive != status)
+        if(this.Server is not null)
         {
-            int num = 0;
-            switch (this.Server.City)
+            if (this.Server.IsActive != status)
             {
-                case "Madison":
-                    num = MadisonOnlineServerStore.GetNumberServersOnline();
-                    if (status)                    
-                        MadisonOnlineServerStore.SetNumberServersOnline(num + 1);                    
-                    else                    
-                        MadisonOnlineServerStore.SetNumberServersOnline(num - 1);                    
-                    break;
-                case "Huntsville":
-                    num = HuntsvilleOnlineServerStore.GetNumberServersOnline();
-                    if (status)                   
-                        HuntsvilleOnlineServerStore.SetNumberServersOnline(num + 1);                    
-                    else                    
-                        HuntsvilleOnlineServerStore.SetNumberServersOnline(num - 1);                   
-                    break;
-                case "Decatur":
-                    num = DecaturOnlineServerStore.GetNumberServersOnline();
-                    if (status)
-                        DecaturOnlineServerStore.SetNumberServersOnline(num + 1);
-                    else
-                        DecaturOnlineServerStore.SetNumberServersOnline(num - 1);
-                    break;
-                case "Gadsden":
-                    num = GadsdenOnlineServerStore.GetNumberServersOnline();
-                    if (status)
-                        GadsdenOnlineServerStore.SetNumberServersOnline(num + 1);
-                    else
-                        GadsdenOnlineServerStore.SetNumberServersOnline(num - 1);
-                    break;
-                case "Selma":
-                    num = SelmaOnlineServerStore.GetNumberServersOnline();
-                    if (status)
-                        SelmaOnlineServerStore.SetNumberServersOnline(num + 1);
-                    else
-                        SelmaOnlineServerStore.SetNumberServersOnline(num - 1);
-                    break;
-                case "Mobile":
-                    num = MobileOnlineServerStore.GetNumberServersOnline();
-                    if (status)
-                        MobileOnlineServerStore.SetNumberServersOnline(num + 1);
-                    else
-                        MobileOnlineServerStore.SetNumberServersOnline(num - 1);
-                    break;
-                
+                int num = 0;
+                switch (this.Server.City)
+                {
+                    case "Madison":
+                        num = MadisonOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            MadisonOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            MadisonOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+                    case "Huntsville":
+                        num = HuntsvilleOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            HuntsvilleOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            HuntsvilleOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+                    case "Decatur":
+                        num = DecaturOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            DecaturOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            DecaturOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+                    case "Gadsden":
+                        num = GadsdenOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            GadsdenOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            GadsdenOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+                    case "Selma":
+                        num = SelmaOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            SelmaOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            SelmaOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+                    case "Mobile":
+                        num = MobileOnlineServerStore.GetNumberServersOnline();
+                        if (status)
+                            MobileOnlineServerStore.SetNumberServersOnline(num + 1);
+                        else
+                            MobileOnlineServerStore.SetNumberServersOnline(num - 1);
+                        break;
+
+                }
+
+                this.Server.IsActive = status;
+                StateHasChanged();
             }
-            
-            this.Server.IsActive = status;
         }
+
+        
     }
 }
