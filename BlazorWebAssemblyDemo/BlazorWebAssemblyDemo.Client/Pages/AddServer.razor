@@ -4,6 +4,7 @@
 @rendermode InteractiveWebAssembly
 
 @inject NavigationManager NavigationManager
+@inject IServersRepository ServersApiRepository
 
 <h3>Add Server</h3>
 <br />
@@ -54,11 +55,11 @@
 
     private Server server { get; set; } = new Server() { IsOnline = false };
 
-    private void Submit()
+    private async Task Submit()
     {
         if (server != null)
         {
-            ServersRepository.AddServer(server);
+            await ServersApiRepository.AddServerAsync(server);
             NavigationManager.NavigateTo("/wasm/servers");
         }
     }

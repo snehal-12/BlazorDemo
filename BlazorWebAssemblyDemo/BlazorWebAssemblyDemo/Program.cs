@@ -1,3 +1,4 @@
+using BlazorWebAssemblyDemo.Client.Models;
 using BlazorWebAssemblyDemo.Client.Pages;
 using BlazorWebAssemblyDemo.Components;
 
@@ -7,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddHttpClient("ServersApi", client =>
+{
+    client.BaseAddress = new Uri("https://blazorwebassemblydemo-2efec-default-rtdb.firebaseio.com/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+builder.Services.AddTransient<IServersRepository, ServersApiRepository>();
 
 var app = builder.Build();
 
